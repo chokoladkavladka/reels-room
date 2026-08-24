@@ -1,11 +1,13 @@
-// db.js — единая SQLite база (легко переносится на Postgres при росте проекта)
+// db.js — единая SQLite база через встроенный в Node модуль node:sqlite.
+// Не требует нативной компиляции при установке (в отличие от better-sqlite3),
+// поэтому надёжно собирается на бесплатных хостингах вроде Render.
 const path = require('path');
-const Database = require('better-sqlite3');
+const { DatabaseSync } = require('node:sqlite');
 
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.sqlite');
-const db = new Database(DB_PATH);
+const db = new DatabaseSync(DB_PATH);
 
-db.pragma('journal_mode = WAL');
+db.exec('PRAGMA journal_mode = WAL;');
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
