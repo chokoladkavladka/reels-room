@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reels Room — вход</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body class="auth-body">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+
+  <main class="auth-card">
+    <div class="brand">
+      <span class="brand-mark">reels<span class="brand-dot">.</span>room</span>
+      <span class="brand-tag">кабинет блогера</span>
+    </div>
+
+    <h1>Заходи и грузи свои Reels</h1>
+    <p class="sub">Логин — как ник. Придумай PIN из 4 цифр: первый вход создаст аккаунт, следующий — просто в него войдёт.</p>
+
+    <form id="login-form" class="auth-form">
+      <label>
+        Логин
+        <input id="username" name="username" placeholder="например, dasha_v" autocomplete="username" required />
+      </label>
+      <label>
+        Имя для отображения
+        <input id="display_name" name="display_name" placeholder="Даша Волкова" />
+      </label>
+      <label>
+        PIN (4 цифры)
+        <input id="pin" name="pin" placeholder="••••" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" required />
+      </label>
+      <button type="submit" class="btn-primary">Войти в кабинет</button>
+      <p id="error" class="error" hidden></p>
+    </form>
+
+    <p class="hint">👀 Все данные по просмотрам, обложке и дате подтягиваются сами — просто вставь ссылку на Reel в кабинете.</p>
+  </main>
+</body>
+<script src="/login.js"></script>
+</html>

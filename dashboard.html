@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reels Room — кабинет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body class="app-body">
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">reels<span class="brand-dot">.</span>room</span>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="mine">Мой кабинет</button>
+    <button class="tab" data-tab="all">Лента всех блогеров</button>
+    <button class="tab" data-tab="analytics">Аналитика</button>
+  </nav>
+  <div class="user-pill" id="user-pill">
+    <span class="avatar" id="user-avatar"></span>
+    <span id="user-name">...</span>
+    <button id="logout" title="Выйти">⏻</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="panel-mine" class="panel">
+    <div class="add-bar">
+      <input id="reel-url" placeholder="Вставь ссылку на Reels: https://www.instagram.com/reel/..." />
+      <button id="add-reel" class="btn-primary">＋ Добавить</button>
+    </div>
+    <p id="add-status" class="status-line" hidden></p>
+
+    <div class="view-toggle">
+      <span class="view-toggle-label">Вид ленты</span>
+      <div class="segmented" id="segmented-mine">
+        <button class="seg active" data-view="feed">🧷 Лента</button>
+        <button class="seg" data-view="table">📋 Таблица</button>
+      </div>
+    </div>
+
+    <div id="mine-feed" class="feed"></div>
+    <div id="mine-table" class="table-wrap" hidden></div>
+    <p id="mine-empty" class="empty" hidden>Пока пусто. Вставь первую ссылку на Reel выше 👆</p>
+  </section>
+
+  <section id="panel-all" class="panel" hidden>
+    <div class="view-toggle">
+      <span class="view-toggle-label">Вид ленты</span>
+      <div class="segmented" id="segmented-all">
+        <button class="seg active" data-view="feed">🧷 Лента</button>
+        <button class="seg" data-view="table">📋 Таблица</button>
+      </div>
+    </div>
+    <div id="all-feed" class="feed"></div>
+    <div id="all-table" class="table-wrap" hidden></div>
+  </section>
+
+  <section id="panel-analytics" class="panel" hidden>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-label">Всего просмотров</span>
+        <span class="stat-value" id="stat-views">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Роликов</span>
+        <span class="stat-value" id="stat-count">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Средние просмотры</span>
+        <span class="stat-value" id="stat-avg">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Лайки / комменты</span>
+        <span class="stat-value" id="stat-eng">0 / 0</span>
+      </div>
+    </div>
+
+    <div class="analytics-grid">
+      <div class="card best-card">
+        <h3>🏆 Лучший ролик</h3>
+        <div id="best-reel">—</div>
+      </div>
+      <div class="card">
+        <h3>Топ блогеров по просмотрам</h3>
+        <ol id="leaderboard" class="leaderboard"></ol>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<template id="reel-card-tpl">
+  <article class="reel-card">
+    <div class="reel-cover">
+      <img loading="lazy" />
+      <span class="reel-views-pill">👁 <b></b></span>
+      <span class="reel-source-pill"></span>
+    </div>
+    <div class="reel-meta">
+      <span class="reel-author"></span>
+      <span class="reel-date"></span>
+    </div>
+  </article>
+</template>
+
+<script src="/app.js"></script>
+</body>
+</html>
