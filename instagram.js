@@ -1,7 +1,8 @@
 // instagram.js — подтягивает обложку/просмотры/дату по ссылке на Reels.
 //
-// Режим 1 (боевой): если задан APIFY_TOKEN — идём в Apify Instagram Scraper
-// (бесплатного тарифа/пробных кредитов Apify хватает для теста).
+// Режим 1 (боевой): если задан APIFY_TOKEN — идём в официальный Apify
+// Instagram Scraper (apify/instagram-scraper). Бесплатных $5 кредитов
+// с нового аккаунта Apify хватает на десятки запросов для теста.
 // Режим 2 (демо): если токена нет или Apify не ответил — генерируем
 // стабильные (детерминированные по ссылке) демо-данные, чтобы сайт
 // всегда работал и его можно было показать без чужих API-ключей.
@@ -9,7 +10,9 @@
 const fetch = require('node-fetch');
 
 const APIFY_TOKEN = process.env.APIFY_TOKEN || '';
-const APIFY_ACTOR = process.env.APIFY_ACTOR || 'apify~instagram-reel-scraper';
+// apify/instagram-scraper — официальный актор Apify, поддерживает
+// прямые ссылки на Reels через directUrls + resultsType: "details"
+const APIFY_ACTOR = process.env.APIFY_ACTOR || 'apify~instagram-scraper';
 
 function extractShortcode(url) {
   const m = url.match(/instagram\.com\/(?:reel|reels|p)\/([A-Za-z0-9_-]+)/);
@@ -53,16 +56,24 @@ async function fetchFromApify(url) {
   const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: [], directUrls: [url], resultsLimit: 1 }),
-    timeout: 60000,
+    body: JSON.stringify({
+      directUrls: [url],
+      resultsType: 'details', // просим полную карточку конкретного поста/Reels, а не список
+      resultsLimit: 1,
+      addParentData: false,
+    }),
+    timeout: 90000,
   });
-  if (!res.ok) throw new Error(`Apify HTTP ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Apify HTTP ${res.status} ${text.slice(0, 200)}`);
+  }
   const items = await res.json();
   const item = Array.isArray(items) ? items[0] : null;
-  if (!item) throw new Error('Apify: пустой ответ');
+  if (!item) throw new Error('Apify: пустой ответ (проверь, что ссылка публичная и актор доступен)');
 
-  // Разные акторы Apify называют поля по-разному — пробуем самые частые варианты.
-  const views = item.videoPlayCount ?? item.videoViewCount ?? item.viewsCount ?? item.playsCount ?? 0;
+  // Разные версии актора называют поля по-разному — пробуем самые частые варианты.
+  const views = item.videoViewCount ?? item.videoPlayCount ?? item.viewsCount ?? item.playsCount ?? 0;
   const cover = item.displayUrl ?? item.imageUrl ?? item.thumbnailUrl ?? null;
   const posted = item.timestamp ?? item.takenAtTimestamp ?? new Date().toISOString();
 
